@@ -1,0 +1,66 @@
+:root {
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e3dcca;
+  font-family: Archivo, system-ui, sans-serif;
+}
+
+a {
+  color: #b3402f;
+  text-decoration: none;
+}
+a:hover {
+  color: #8a2f22;
+}
+
+input {
+  font-family: Archivo, sans-serif;
+}
+input:focus {
+  outline: none;
+}
+input::placeholder {
+  color: #bdb6a8;
+}
+
+@keyframes sahraIn {
+  from {
+    opacity: 0;
+    transform: translateY(9px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes sahraFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes sahraStamp {
+  from {
+    opacity: 0;
+    transform: rotate(-2deg) scale(1.06);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(-2deg) scale(1);
+  }
+}
