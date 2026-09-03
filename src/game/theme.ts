@@ -35,7 +35,13 @@ export const catInk = (id: string): InkSet => {
   return INKS[cat.ink];
 };
 
-export const TEAM_C: [string, string] = ['#b3402f', '#6f7a4b'];
+/**
+ * Blue/orange — separable under deuteranopia, protanopia and tritanopia alike,
+ * unlike the red/green pair this replaces. Both clear 4.5:1 against white, so
+ * the 11.5px `Coupon` label passes AA and not just the large team plates.
+ * Neither collides with a category ink.
+ */
+export const TEAM_C: [string, string] = ['#1f5c8b', '#b06414'];
 
 export type LifelineKey = 's3d' | 'fawet' | 'double';
 
