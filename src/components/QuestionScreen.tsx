@@ -1,17 +1,23 @@
-import type { CSSProperties } from 'react';
+import { useState, type CSSProperties } from 'react';
 import { INK, LIFELINES, PAPER, TEAM_C, TIMER_SECONDS, fmt } from '../game/theme';
 import { questionLifelineMode } from '../game/lifelines';
 import type { InkSet } from '../game/theme';
 import type { Award, DerivedGame, TeamIndex } from '../game/types';
 import { Coupon } from './Coupon';
 import { HoverButton } from './HoverButton';
+import { RichText } from './RichText';
+import { UndoButton } from './UndoButton';
+import { plainLength } from '../game/markup';
 
 interface QuestionScreenProps {
   phase: 'question' | 'reveal';
   categoryTitle: string;
   categoryInk: InkSet;
   row: number;
+  lead?: string;
   question: string;
+  /** Optional photo shown beside the question; absent means full-width text. */
+  image?: string;
   answer: string;
   turn: TeamIndex;
   derived: DerivedGame;
@@ -66,12 +72,54 @@ function Plate({
   );
 }
 
+/**
+ * The photo that accompanies a question, framed like the answer card so the two
+ * read as the same family. A src that fails to load falls back to a labelled
+ * dashed frame — a missing file should be visibly missing to the host, not a
+ * broken-image glyph on a screen the whole room is looking at.
+ */
+function QuestionPhoto({ src, ink }: { src: string; ink: InkSet }) {
+  const [failed, setFailed] = useState(false);
+
+  return (
+    <div
+      style={{
+        flex: 2,
+        minWidth: 0,
+        maxWidth: 420,
+        aspectRatio: '4 / 3',
+        boxSizing: 'border-box',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'hidden',
+        background: ink.tint,
+        // Matches the answer card's rule; a failed load adds a dashed outline so
+        // the gap reads as "missing file", not as a design choice.
+        borderTop: `4px solid ${ink.c}`,
+        borderRight: failed ? '1px dashed rgba(30,27,24,.28)' : undefined,
+        borderBottom: failed ? '1px dashed rgba(30,27,24,.28)' : undefined,
+        borderLeft: failed ? '1px dashed rgba(30,27,24,.28)' : undefined,
+        animation: 'sahraIn .3s ease both',
+      }}
+    >
+      {failed ? (
+        <span style={{ font: "500 10px 'IBM Plex Mono', monospace", letterSpacing: '.2em', textTransform: 'uppercase', color: '#a89f91' }}>Photo missing</span>
+      ) : (
+        <img src={src} alt="" onError={() => setFailed(true)} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+      )}
+    </div>
+  );
+}
+
 export function QuestionScreen({
   phase,
   categoryTitle,
   categoryInk,
   row,
+  lead,
   question,
+  image,
   answer,
   turn,
   derived,
@@ -90,7 +138,10 @@ export function QuestionScreen({
   const dblLL = derived.activeLL && derived.activeLL.key === 'double' ? derived.activeLL : null;
   const doubled = !!dblLL;
   const qValue = doubled ? base * 2 : base;
-  const qSize = question.length > 96 ? 44 : 54;
+  // Sized off the markup-free length, and stepped down once more when a lead is
+  // present — the two share the stage's fixed 720px height.
+  const qLen = plainLength(question);
+  const qSize = qLen > 108 ? 40 : qLen > 84 ? 45 : qLen > 52 ? 50 : lead ? 50 : 54;
   const showAnswer = phase === 'reveal';
   const urgent = secLeft <= 10;
   const timerPct = Math.max(0, Math.min(100, (secLeft / TIMER_SECONDS) * 100));
@@ -131,30 +182,56 @@ export function QuestionScreen({
             </div>
           )}
         </div>
-        <div style={{ font: "500 10.5px 'IBM Plex Mono', monospace", letterSpacing: '.18em', textTransform: 'uppercase', color: '#7d7365' }}>
-          {teamName(turn)} to answer
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 5, textAlign: 'right' }}>
+          <div style={{ font: "500 10.5px 'IBM Plex Mono', monospace", letterSpacing: '.18em', textTransform: 'uppercase', whiteSpace: 'nowrap', color: '#7d7365' }}>
+            {teamName(turn)} to answer
+          </div>
+          <div style={{ font: "500 9.5px 'IBM Plex Mono', monospace", letterSpacing: '.14em', textTransform: 'uppercase', whiteSpace: 'nowrap', color: '#a89f91' }}>
+            {onQuestion ? 'host judges · reveal when ready' : 'award it, or give it to no one'}
+          </div>
         </div>
       </div>
 
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 34, padding: '12px 0' }}>
-        <div style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 600, fontSize: qSize, lineHeight: 1.14, letterSpacing: '-.01em', maxWidth: 1000, textWrap: 'pretty' } as CSSProperties}>
-          {question}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 30, padding: '12px 0', minHeight: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 34, minHeight: 0 }}>
+          <div style={{ flex: image ? 3 : 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 18 }}>
+            {lead && (
+              <div
+                style={{
+                  fontFamily: 'Archivo, sans-serif',
+                  fontWeight: 400,
+                  fontSize: 21,
+                  lineHeight: 1.42,
+                  maxWidth: 880,
+                  color: '#6b6357',
+                  textWrap: 'pretty',
+                } as CSSProperties}
+              >
+                <RichText text={lead} />
+              </div>
+            )}
+            <div style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 600, fontSize: image ? Math.min(qSize, 44) : qSize, lineHeight: 1.14, letterSpacing: '-.01em', maxWidth: 1000, textWrap: 'pretty' } as CSSProperties}>
+              <RichText text={question} />
+            </div>
+          </div>
+          {image && <QuestionPhoto src={image} ink={categoryInk} />}
         </div>
         {showAnswer && (
           <div
             style={{
-              alignSelf: 'flex-start',
+              alignSelf: 'center',
               width: 'max-content',
               maxWidth: 920,
               boxSizing: 'border-box',
-              padding: '18px 26px 20px',
+              padding: '18px 30px 20px',
+              textAlign: 'center',
               background: categoryInk.tint,
-              borderLeft: `4px solid ${categoryInk.c}`,
+              borderTop: `4px solid ${categoryInk.c}`,
               animation: 'sahraIn .3s ease both',
             }}
           >
             <div style={{ font: "500 9.5px 'IBM Plex Mono', monospace", letterSpacing: '.2em', textTransform: 'uppercase', color: '#8c8376', marginBottom: 8 }}>Answer</div>
-            <div style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 600, fontSize: 37, lineHeight: 1.1, whiteSpace: 'nowrap', color: categoryInk.num }}>{answer}</div>
+            <div style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 600, fontSize: 37, lineHeight: 1.1, textWrap: 'balance', color: categoryInk.num } as CSSProperties}>{answer}</div>
           </div>
         )}
       </div>
@@ -196,22 +273,7 @@ export function QuestionScreen({
                 />
               ))}
             </div>
-            <div
-              onClick={canUndo ? onUndo : undefined}
-              style={{
-                height: 38,
-                boxSizing: 'border-box',
-                padding: '0 12px',
-                display: 'flex',
-                alignItems: 'center',
-                border: `1px dashed rgba(30,27,24,${canUndo ? '.32' : '.14'})`,
-                cursor: canUndo ? 'pointer' : 'default',
-              }}
-            >
-              <span style={{ font: "500 10px 'IBM Plex Mono', monospace", letterSpacing: '.14em', textTransform: 'uppercase', whiteSpace: 'nowrap', color: canUndo ? '#7d7365' : '#c4bdb0' }}>
-                {canUndo ? '↶ Undo' : 'Nothing to undo'}
-              </span>
-            </div>
+            <UndoButton canUndo={canUndo} onUndo={onUndo} />
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             {phase === 'question' ? (

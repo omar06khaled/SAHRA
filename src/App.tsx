@@ -9,13 +9,14 @@ import { useSahraGame } from './game/useSahraGame';
 import { secondsLeft, phoneSecondsLeft } from './game/clock';
 import { byId } from './game/pool';
 import { catInk } from './game/theme';
-import { teamName as teamNameOf, roster as rosterOf } from './game/helpers';
+import { teamName as teamNameOf, roster as rosterOf, rosterNames as rosterNamesOf } from './game/helpers';
 import type { TeamIndex } from './game/types';
 
 export default function App() {
   const { state, derived, turn, actions } = useSahraGame();
   const teamName = (ti: TeamIndex) => teamNameOf(state, ti);
   const roster = (ti: TeamIndex) => rosterOf(state, ti);
+  const rosterNames = (ti: TeamIndex) => rosterNamesOf(state, ti);
   const canUndo = state.log.length > 0;
 
   return (
@@ -51,7 +52,7 @@ export default function App() {
           hover={state.hover}
           canUndo={canUndo}
           teamName={teamName}
-          roster={roster}
+          roster={rosterNames}
           onHover={actions.setHover}
           onPick={actions.pick}
           onEndGame={actions.endGame}
@@ -65,7 +66,9 @@ export default function App() {
           categoryTitle={byId(state.active.cat).title}
           categoryInk={catInk(state.active.cat)}
           row={state.active.row}
+          lead={byId(state.active.cat).qs[state.active.row - 1].lead}
           question={byId(state.active.cat).qs[state.active.row - 1].q}
+          image={byId(state.active.cat).qs[state.active.row - 1].img}
           answer={byId(state.active.cat).qs[state.active.row - 1].a}
           turn={turn}
           derived={derived}

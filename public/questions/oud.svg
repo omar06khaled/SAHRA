@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <rect width="400" height="300" fill="#e3ebe8"/>
+  <g stroke="#3f7068" fill="none">
+    <ellipse cx="150" cy="190" rx="86" ry="76" opacity=".30" stroke-width="10"/>
+    <circle cx="150" cy="176" r="26" opacity=".38" stroke-width="6"/>
+    <path d="M228 154 L330 74" opacity=".34" stroke-width="16" stroke-linecap="round"/>
+    <path d="M330 74 l24 -18" opacity=".34" stroke-width="20" stroke-linecap="round"/>
+    <g opacity=".26" stroke-width="2">
+      <path d="M150 246 L322 84"/><path d="M156 250 L328 90"/><path d="M144 242 L316 78"/>
+    </g>
+  </g>
+  <text x="200" y="46" font-family="Georgia, serif" font-size="22" font-weight="700" fill="#3f7068" opacity=".55" text-anchor="middle" letter-spacing="3">PLACEHOLDER</text>
+</svg>
