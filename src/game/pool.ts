@@ -1,5 +1,17 @@
 export interface Question {
+  /**
+   * Optional set-up read before the question itself — the flavour line that
+   * frames it. Rendered smaller and quieter than `q` so the actual question
+   * still lands at display size.
+   */
+  lead?: string;
   q: string;
+  /**
+   * Optional photo shown beside the question, served from `public/`. Pick art
+   * that sets the scene without giving the answer away — the whole room sees it
+   * for the full sixty seconds.
+   */
+  img?: string;
   a: string;
 }
 
@@ -11,21 +23,168 @@ export interface Category {
   qs: Question[];
 }
 
+/**
+ * `lead` and `q` accept inline markup: `**bold**` for emphasis the host should
+ * lean on, `*italics*` for titles of films, songs and series. See `RichText`.
+ *
+ * The first six categories are Pack 01 — real content, one per ink so a board
+ * drafted entirely from the pack uses all six colours. The rest still carry
+ * placeholder questions, awaiting packs of their own.
+ */
 export const POOL: Category[] = [
+  // ── Pack 01 ────────────────────────────────────────────────────────────────
   { id: 'cine', title: 'El Cinema2i', sub: 'Films, stars and the lines everyone quotes', ink: 0, qs: [
-    { q: 'What is the Arabic word for cinema?', a: 'Sinima' },
-    { q: 'A film shot in one apartment with four actors is usually called what kind of film?', a: 'A chamber film' },
-    { q: 'In film credits, who is responsible for the lighting and the camera?', a: 'The cinematographer' },
-    { q: 'What does a film festival jury hand out at the end of the week?', a: 'The awards' },
-    { q: 'A film released for the Eid holiday season is competing for which audience?', a: 'The family audience' },
-    { q: 'What is the term for the short version of a film cut to sell it?', a: 'The trailer' } ] },
-  { id: 'kora', title: 'Kora', sub: 'Football, from the street to the league', ink: 1, qs: [
-    { q: 'How many players from one side are on the pitch at kick-off?', a: 'Eleven' },
-    { q: 'How long is a football match, not counting stoppage time?', a: '90 minutes' },
-    { q: 'What colour card sends a player off?', a: 'Red' },
-    { q: 'How often is the men’s FIFA World Cup held?', a: 'Every four years' },
-    { q: 'What is the name for three goals by one player in a single match?', a: 'A hat-trick' },
-    { q: 'From what distance is a penalty kick taken?', a: 'Eleven metres' } ] },
+    {
+      lead: 'Nefta7 b easy one.',
+      q: 'Who played **El Limby**?',
+      a: 'Mohamed Saad' },
+    {
+      lead: 'In *El Irhab Wel Kabab*, Adel Imam goes out to do the most dangerous activity known to Egyptians: **finish paperwork**.',
+      q: 'Which Cairo building does he go to?',
+      a: 'Mogamma El Tahrir' },
+    {
+      lead: 'Ahmed Helmy plays triplets pretending to be one person in *Keda Reda*.',
+      q: 'Name **all three brothers**.',
+      a: 'El Prince, Bibo and Semsem' },
+    {
+      lead: 'In *X Large*, Magdy thinks things with his childhood friend Dina might finally be going well. Very optimistic of him.',
+      q: 'What does he discover she has actually been using him for?',
+      img: '/questions/film.svg',
+      a: 'A case for her university research' },
+    {
+      q: 'Before directing some of Egypt’s biggest modern films, which Egyptian director worked as an **assistant director on El Nazer**?',
+      a: 'Marwan Hamed' },
+    {
+      lead: 'No actors this time.',
+      q: 'Name the **writer and director** behind *El Irhab Wel Kabab*.',
+      a: 'Wahid Hamed (writer) and Sherif Arafa (director)' } ] },
+
+  { id: 'kora', title: 'Kora Masry', sub: 'Ahly, Zamalek and the national team', ink: 1, qs: [
+    {
+      lead: '2020. Al Ahly vs Zamalek. “Final of the Century.” 1–1, and extra time is getting ready to ruin everyone’s blood pressure.',
+      q: 'Who scored Al Ahly’s **86th-minute winner**?',
+      a: 'Mohamed Magdy Afsha' },
+    {
+      lead: '2002. Ahly 6–1 Zamalek. Khaled Bebo personally made sure this match would be mentioned at family gatherings forever.',
+      q: 'How many of Ahly’s six goals did he score?',
+      a: 'Four' },
+    {
+      lead: 'Zamalek was founded in 1911 — but it wasn’t originally called Zamalek.',
+      q: 'What was the club’s **first name**?',
+      a: 'Qasr El Nil Club' },
+    {
+      lead: 'Ahly and Zamalek can relax for one question.',
+      q: 'Which Egyptian club became the **first Egyptian side to conquer Africa’s top club competition**, winning it in 1969?',
+      a: 'Ismaily' },
+    {
+      lead: 'Egypt didn’t just win AFCON three times in a successful era. They won it **three editions in a row**.',
+      q: 'Name all three years.',
+      a: '2006, 2008 and 2010' },
+    {
+      lead: 'Two Egyptian players share the AFCON record with **four tournament titles each as players**.',
+      q: 'Name both.',
+      a: 'Ahmed Hassan and Essam El Hadary' } ] },
+
+  { id: 'ma3loomat', title: 'Ma3loomat 3amma', sub: 'General knowledge, no excuses', ink: 2, qs: [
+    {
+      q: 'Which planet is known as the **Red Planet**?',
+      a: 'Mars' },
+    {
+      lead: 'And no, we’re not accepting “the heart because I love deeply.”',
+      q: 'What is the **largest organ in the human body**?',
+      a: 'The skin' },
+    {
+      lead: 'Flying squirrels are frauds. They only glide.',
+      q: 'What is the **only mammal capable of true powered flight**?',
+      a: 'The bat' },
+    {
+      lead: 'You’re asked for the **largest desert on Earth**. You say Sahara because obviously. You are wrong.',
+      q: 'What is it?',
+      a: 'Antarctica' },
+    {
+      lead: 'Mercury is closest to the Sun, bas apparently Venus said: **“Ana el a7ar.”**',
+      q: 'Which planet is actually the **hottest in the Solar System**?',
+      a: 'Venus' },
+    {
+      lead: 'Every country’s flag is basically some version of a rectangle… except one.',
+      q: 'Which country has the world’s **only non-rectangular national flag**?',
+      a: 'Nepal' } ] },
+
+  { id: 'akl', title: 'Akl El Beit', sub: 'Home cooking and what is on the table', ink: 3, qs: [
+    {
+      q: 'Which green dish has basically every Egyptian household convinced that **their** version is the correct one?',
+      a: 'Molokhia' },
+    {
+      lead: 'Rice. Lentils. Macaroni. Chickpeas. Tomato sauce. Crispy onions. A dish looked at every carb in the kitchen and said **“aywa, kollo.”**',
+      q: 'What are we eating?',
+      a: 'Koshari' },
+    {
+      lead: 'That garlic-and-coriander mixture sizzling in ghee right before it hits the molokhia has a name.',
+      q: 'What is it?',
+      a: 'Ta2leya' },
+    {
+      lead: 'Wara2 3enab, kousa, kromb, eggplant — the vegetable keeps changing, but traditional Egyptian **mahshi** keeps coming back to one main filling.',
+      q: 'What is it?',
+      a: 'Seasoned rice' },
+    {
+      lead: 'Egyptian ta’ameya has a very important difference from the chickpea falafel common elsewhere in the region.',
+      q: 'What legume is Egyptian ta’ameya traditionally based on?',
+      a: 'Fava beans (fool)' },
+    {
+      lead: 'Koshari is thoroughly Egyptian now, bas its ancestry is commonly linked to the Indian dish **khichdi**.',
+      q: 'What two staple ingredients form the basic combination behind khichdi?',
+      a: 'Rice and lentils' } ] },
+
+  { id: 'tofoola', title: 'Ayam El Tofoola', sub: 'Bakkar, Spacetoon and the Ramadan of your childhood', ink: 4, qs: [
+    {
+      lead: 'Bakkar had one companion who honestly deserved her own spin-off.',
+      q: 'What was the name of his goat?',
+      a: 'Rashida' },
+    {
+      lead: 'You hear the opening of *Bakkar*. Ramadan memory unlocked immediately.',
+      q: 'Which Egyptian singer performed the famous theme?',
+      a: 'Mohamed Mounir' },
+    {
+      q: 'Which Egyptian snack brand launched in **1997** and basically helped turn the packaged croissant into a school-bag food group?',
+      a: 'Molto' },
+    {
+      lead: 'Spacetoon didn’t have “genres.” It had **planets**, because apparently normal television organization was too boring.',
+      q: 'Which planet was home to the sports shows?',
+      a: 'Kawkab Riyada (Sport Planet)' },
+    {
+      lead: 'Before TikTok challenges, Egyptian Ramadan had **Fawazeer**.',
+      q: 'Name the **two female stars** most famously associated with the classic 1980s–90s Fawazeer era.',
+      a: 'Nelly and Sherihan' },
+    {
+      lead: 'Let’s see who’s representing the older side of the room.',
+      q: '*Boogie w Tamtam* first arrived on Egyptian television during Ramadan in what year?',
+      a: '1983' } ] },
+
+  { id: 'agh', title: 'Aghani Zaman', sub: 'Old songs and the voices behind them', ink: 5, qs: [
+    {
+      lead: 'If someone says **Kawkab El Sharq** and your teta sees you hesitating, you’ve already disappointed her.',
+      q: 'Who are they talking about?',
+      a: 'Umm Kulthum' },
+    {
+      q: 'Who was known across Egypt and the Arab world as **El Andaleeb El Asmar**?',
+      a: 'Abdel Halim Hafez' },
+    {
+      q: 'Which Egyptian singer and actress gave us the patriotic classic **Ya Habibti Ya Masr**?',
+      a: 'Shadia' },
+    {
+      q: '*Enta Omri* marked the beginning of a historic collaboration between Umm Kulthum and which legendary Egyptian composer?',
+      img: '/questions/oud.svg',
+      a: 'Mohamed Abdel Wahab' },
+    {
+      lead: 'Traditionalists raised an eyebrow when *Enta Omri* introduced a distinctly modern sound into Umm Kulthum’s orchestra.',
+      q: 'Which instrument opens the recording with its famous riff?',
+      a: 'The electric guitar' },
+    {
+      lead: 'One for the team that somehow has both a Warda fan **and** an Aaliyah fan.',
+      q: 'Which Warda classic was sampled in Aaliyah’s *Don’t Know What to Tell Ya* — and decades later appeared in *Moon Knight*?',
+      a: 'Batwanes Beek' } ] },
+
+  // ── Placeholder categories, each still awaiting a pack ─────────────────────
   { id: 'kalam', title: 'Kalam El 3ela', sub: 'Household sayings, habits and house rules', ink: 2, qs: [
     { q: 'What do you say to someone who has just had a haircut or a bath?', a: 'Na’eeman' },
     { q: 'Who in the family is traditionally asked to settle an argument?', a: 'The eldest' },
@@ -33,20 +192,6 @@ export const POOL: Category[] = [
     { q: 'What do guests bring when invited to dinner?', a: 'Sweets' },
     { q: 'What is the word for the visit paid to a family after good news?', a: 'Mabrouk visit' },
     { q: 'Who traditionally pours the tea for the room?', a: 'The youngest' } ] },
-  { id: 'akl', title: 'Akl El Beit', sub: 'Home cooking and what is on the table', ink: 3, qs: [
-    { q: 'What grain is the base of koshari?', a: 'Rice' },
-    { q: 'Which leaf is chopped fine to make mulukhiya?', a: 'Jute mallow' },
-    { q: 'What is the pulse used for ful medames?', a: 'Fava beans' },
-    { q: 'What is bread called in Egyptian Arabic?', a: '‘Eish' },
-    { q: 'Which spice mix of nuts and seeds is eaten with bread and oil?', a: 'Dukkah' },
-    { q: 'What syrup-soaked pastry is filled with nuts or cream at Ramadan?', a: 'Kunafa' } ] },
-  { id: 'agh', title: 'Aghani Zaman', sub: 'Old songs and the voices behind them', ink: 4, qs: [
-    { q: 'What is the Arabic word for song?', a: 'Ughniya' },
-    { q: 'What is the name of the singer who leads a group performance?', a: 'The soloist' },
-    { q: 'Which string instrument with a bent neck anchors classical Arabic music?', a: 'The oud' },
-    { q: 'What is the word for the improvised vocal opening before a song?', a: 'Mawwal' },
-    { q: 'What do you call the group of instrumentalists behind a singer?', a: 'The takht' },
-    { q: 'Which percussion instrument is a large frame drum played with the fingers?', a: 'The riqq' } ] },
   { id: 'masr', title: 'Masr Fein?', sub: 'Places, roads and where things are', ink: 5, qs: [
     { q: 'Which river runs through Cairo?', a: 'The Nile' },
     { q: 'Which sea lies to the north of Egypt?', a: 'The Mediterranean' },
