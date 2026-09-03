@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react';
-import { INK, PAPER, TEAM_C } from '../game/theme';
+import { INK, PAPER, TEAM_C, headerLabel } from '../game/theme';
 import type { Team, TeamIndex } from '../game/types';
+import { HeaderMark } from './HeaderMark';
 
 interface TeamSheetScreenProps {
   teams: [Team, Team];
@@ -9,13 +10,6 @@ interface TeamSheetScreenProps {
   onBack: () => void;
   onNext: () => void;
 }
-
-const headerLabel: CSSProperties = {
-  font: "500 10px 'IBM Plex Mono', monospace",
-  letterSpacing: '.16em',
-  textTransform: 'uppercase',
-  color: '#7d7365',
-};
 
 const fieldLabel: CSSProperties = {
   font: "500 9.5px 'IBM Plex Mono', monospace",
@@ -53,22 +47,9 @@ export function TeamSheetScreen({ teams, onSetName, onSetMember, onBack, onNext 
           justifyContent: 'space-between',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 14 }}>
-          <div
-            style={{
-              fontFamily: 'Archivo, sans-serif',
-              fontVariationSettings: "'wdth' 112",
-              fontWeight: 700,
-              fontSize: 30,
-              lineHeight: 0.82,
-              letterSpacing: '-.01em',
-            }}
-          >
-            SAHRA
-          </div>
-          <div style={{ width: 1, height: 20, background: 'rgba(30,27,24,.3)' }} />
+        <HeaderMark>
           <div style={{ ...headerLabel, paddingBottom: 2 }}>Team sheet</div>
-        </div>
+        </HeaderMark>
         <div style={headerLabel}>Members optional</div>
       </div>
 

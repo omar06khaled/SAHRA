@@ -1,7 +1,7 @@
-import type { CSSProperties } from 'react';
 import { POOL, byId } from '../game/pool';
-import { INK, INKS, PLAYED_FILL, TEAM_C, catInk } from '../game/theme';
+import { INK, INKS, PLAYED_FILL, TEAM_C, catInk, headerLabel } from '../game/theme';
 import type { TeamIndex } from '../game/types';
+import { HeaderMark } from './HeaderMark';
 
 interface DraftScreenProps {
   taken: Record<string, TeamIndex>;
@@ -12,17 +12,10 @@ interface DraftScreenProps {
   onOpenBoard: () => void;
 }
 
-const headerLabel: CSSProperties = {
-  font: "500 10px 'IBM Plex Mono', monospace",
-  letterSpacing: '.16em',
-  textTransform: 'uppercase',
-  color: '#7d7365',
-};
-
 export function DraftScreen({ taken, drafted, turn, teamName, onPick, onOpenBoard }: DraftScreenProps) {
   const claimedCount = drafted.length;
   const poolCount = POOL.length;
-  const columns = poolCount <= 6 ? 3 : poolCount <= 8 ? 4 : 5;
+  const columns = poolCount <= 6 ? 3 : poolCount <= 8 ? 4 : poolCount <= 15 ? 5 : 6;
   const nameLen = Math.max(teamName(0).length, teamName(1).length);
   const plateSize = nameLen > 14 ? 24 : nameLen > 10 ? 29 : 34;
   const ready = claimedCount >= 6;
@@ -50,24 +43,11 @@ export function DraftScreen({ taken, drafted, turn, teamName, onPick, onOpenBoar
           justifyContent: 'space-between',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 14 }}>
-          <div
-            style={{
-              fontFamily: 'Archivo, sans-serif',
-              fontVariationSettings: "'wdth' 112",
-              fontWeight: 700,
-              fontSize: 30,
-              lineHeight: 0.82,
-              letterSpacing: '-.01em',
-            }}
-          >
-            SAHRA
-          </div>
-          <div style={{ width: 1, height: 20, background: 'rgba(30,27,24,.3)' }} />
+        <HeaderMark>
           <div style={{ ...headerLabel, paddingBottom: 2 }}>
             Category draft / {claimedCount} of 6 claimed / {poolCount} on the table
           </div>
-        </div>
+        </HeaderMark>
         <div
           style={{
             height: 56,

@@ -1,8 +1,18 @@
 import { POOL } from './pool';
 
+import type { CSSProperties } from 'react';
+
 export const PAPER = '#faf8f3';
 export const INK = '#1e1b18';
 export const PLAYED_FILL = '#f2f1ec';
+
+/** The mono label used for every piece of secondary header text. */
+export const headerLabel: CSSProperties = {
+  font: "500 10px 'IBM Plex Mono', monospace",
+  letterSpacing: '.16em',
+  textTransform: 'uppercase',
+  color: '#7d7365',
+};
 
 export interface InkSet {
   c: string;
