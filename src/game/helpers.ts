@@ -6,8 +6,16 @@ export function teamName(state: GameState, ti: TeamIndex): string {
 }
 
 export function roster(state: GameState, ti: TeamIndex): string {
-  const names = state.teams[ti].members.map((m) => m.trim()).filter(Boolean);
+  const names = rosterNames(state, ti);
   return names.length ? names.join(' · ') : 'No names given';
+}
+
+/**
+ * The filled-in member names, unjoined — for screens that render each player as
+ * its own element and need a real empty state rather than a placeholder string.
+ */
+export function rosterNames(state: GameState, ti: TeamIndex): string[] {
+  return state.teams[ti].members.map((m) => m.trim()).filter(Boolean);
 }
 
 export function turnOf(state: GameState, currentTurn: TeamIndex): TeamIndex {

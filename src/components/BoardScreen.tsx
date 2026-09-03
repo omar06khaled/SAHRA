@@ -1,9 +1,11 @@
-import { Fragment, type CSSProperties } from 'react';
+import { Fragment } from 'react';
 import { byId } from '../game/pool';
-import { INK, LIFELINES, PLAYED_FILL, TEAM_C, catInk, fmt } from '../game/theme';
+import { INK, LIFELINES, PAPER, PLAYED_FILL, TEAM_C, catInk, fmt, headerLabel } from '../game/theme';
 import { benchLifelineMode } from '../game/lifelines';
 import type { DerivedGame, TeamIndex } from '../game/types';
 import { Coupon } from './Coupon';
+import { HeaderMark } from './HeaderMark';
+import { UndoButton } from './UndoButton';
 
 interface BoardScreenProps {
   drafted: string[];
@@ -12,19 +14,13 @@ interface BoardScreenProps {
   hover: string | null;
   canUndo: boolean;
   teamName: (ti: TeamIndex) => string;
-  roster: (ti: TeamIndex) => string;
+  /** Filled-in member names only — the bench renders its own empty state. */
+  roster: (ti: TeamIndex) => string[];
   onHover: (key: string | null) => void;
   onPick: (cat: string, row: number) => void;
   onEndGame: () => void;
   onUndo: () => void;
 }
-
-const headerLabel: CSSProperties = {
-  font: "500 10px 'IBM Plex Mono', monospace",
-  letterSpacing: '.16em',
-  textTransform: 'uppercase',
-  color: '#7d7365',
-};
 
 export function BoardScreen({
   drafted,
@@ -70,57 +66,33 @@ export function BoardScreen({
           justifyContent: 'space-between',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 14 }}>
-          <div
-            style={{
-              fontFamily: 'Archivo, sans-serif',
-              fontVariationSettings: "'wdth' 112",
-              fontWeight: 700,
-              fontSize: 30,
-              lineHeight: 0.82,
-              letterSpacing: '-.01em',
-            }}
-          >
-            SAHRA
-          </div>
-          <div style={{ width: 1, height: 20, background: 'rgba(30,27,24,.3)' }} />
+        <HeaderMark>
           <div style={{ ...headerLabel, paddingBottom: 2 }}>Played {String(playedCount).padStart(2, '0')} / 36</div>
-          <div
-            onClick={onEndGame}
-            style={{
-              cursor: 'pointer',
-              minHeight: 34,
-              display: 'flex',
-              alignItems: 'flex-end',
-              padding: '0 10px 2px',
-              font: "500 12px 'IBM Plex Mono', monospace",
-              letterSpacing: '.14em',
-              textTransform: 'uppercase',
-              color: '#7d7365',
-              borderBottom: '1px solid rgba(30,27,24,.3)',
-            }}
-          >
-            End game
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <button
+              type="button"
+              onClick={onEndGame}
+              style={{
+                height: 30,
+                boxSizing: 'border-box',
+                padding: '0 12px',
+                appearance: 'none',
+                borderRadius: 0,
+                background: 'transparent',
+                border: '1px solid rgba(30,27,24,.32)',
+                font: "500 10px 'IBM Plex Mono', monospace",
+                letterSpacing: '.14em',
+                textTransform: 'uppercase',
+                whiteSpace: 'nowrap',
+                color: '#7d7365',
+                cursor: 'pointer',
+              }}
+            >
+              End game
+            </button>
+            <UndoButton canUndo={canUndo} onUndo={onUndo} height={30} />
           </div>
-          <div
-            onClick={canUndo ? onUndo : undefined}
-            style={{
-              minHeight: 34,
-              display: 'flex',
-              alignItems: 'flex-end',
-              padding: '0 10px 2px',
-              font: "500 12px 'IBM Plex Mono', monospace",
-              letterSpacing: '.14em',
-              textTransform: 'uppercase',
-              whiteSpace: 'nowrap',
-              color: canUndo ? '#7d7365' : '#c4bdb0',
-              borderBottom: `1px solid rgba(30,27,24,${canUndo ? '.3' : '.12'})`,
-              cursor: canUndo ? 'pointer' : 'default',
-            }}
-          >
-            {canUndo ? '↶ Undo' : 'Nothing to undo'}
-          </div>
-        </div>
+        </HeaderMark>
         <div
           style={{
             height: 76,
@@ -287,16 +259,42 @@ export function BoardScreen({
                     <div style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 15, lineHeight: 1, letterSpacing: '.09em', textTransform: 'uppercase', whiteSpace: 'nowrap', color: '#5c5449' }}>
                       {teamName(ti)}
                     </div>
-                    <div style={{ font: "500 12px 'IBM Plex Mono', monospace", letterSpacing: '.08em', textTransform: 'uppercase', color: '#8a8175', whiteSpace: 'nowrap' }}>
-                      {roster(ti)}
-                    </div>
+                    {roster(ti).length > 0 ? (
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, justifyContent: ti === 1 ? 'flex-end' : 'flex-start' }}>
+                        {roster(ti).map((name) => (
+                          <span
+                            key={name}
+                            style={{
+                              padding: '3px 8px 4px',
+                              background: PAPER,
+                              border: `1px solid ${TEAM_C[ti]}`,
+                              fontFamily: 'Archivo, sans-serif',
+                              fontWeight: 600,
+                              fontSize: 11,
+                              lineHeight: 1,
+                              letterSpacing: '.07em',
+                              textTransform: 'uppercase',
+                              whiteSpace: 'nowrap',
+                              color: '#4a423a',
+                            }}
+                          >
+                            {name}
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      <div style={{ font: "500 10.5px 'IBM Plex Mono', monospace", letterSpacing: '.08em', textTransform: 'uppercase', color: '#b3aa9c', whiteSpace: 'nowrap' }}>
+                        No players listed · add them on the team sheet
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div style={{ fontFamily: 'Archivo, sans-serif', fontVariationSettings: "'wdth' 112", fontWeight: 700, fontSize: 36, lineHeight: 0.9, letterSpacing: '-.005em' }}>
                   {fmt(derived.scores[ti])}
                 </div>
               </div>
-              <div style={{ display: 'flex', gap: 7 }}>
+              {/* Pulled outward, away from the centre divider — mirrored, since team 1's row is reversed. */}
+              <div style={{ display: 'flex', gap: 7, marginRight: ti === 0 ? 24 : 0, marginLeft: ti === 1 ? 24 : 0 }}>
                 {LIFELINES.map((l) => (
                   <Coupon key={l.key} teamIndex={ti} label={l.label} mode={benchLifelineMode(derived, ti, l.key)} />
                 ))}
