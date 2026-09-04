@@ -7,7 +7,7 @@ import { QuestionScreen } from './components/QuestionScreen';
 import { FinalScreen } from './components/FinalScreen';
 import { useSahraGame } from './game/useSahraGame';
 import { secondsLeft, phoneSecondsLeft } from './game/clock';
-import { byId } from './game/pool';
+import { byId, questionAt } from './game/pool';
 import { catInk } from './game/theme';
 import { teamName as teamNameOf, roster as rosterOf, rosterNames as rosterNamesOf } from './game/helpers';
 import type { TeamIndex } from './game/types';
@@ -18,6 +18,8 @@ export default function App() {
   const roster = (ti: TeamIndex) => rosterOf(state, ti);
   const rosterNames = (ti: TeamIndex) => rosterNamesOf(state, ti);
   const canUndo = state.log.length > 0;
+  // Which of the tier's questions this board drew for the open tile.
+  const active = state.active ? questionAt(state.active.cat, state.active.row, state.variants) : null;
 
   return (
     <Stage>
@@ -60,16 +62,16 @@ export default function App() {
         />
       )}
 
-      {(state.phase === 'question' || state.phase === 'reveal') && state.active && (
+      {(state.phase === 'question' || state.phase === 'reveal') && state.active && active && (
         <QuestionScreen
           phase={state.phase}
           categoryTitle={byId(state.active.cat).title}
           categoryInk={catInk(state.active.cat)}
           row={state.active.row}
-          lead={byId(state.active.cat).qs[state.active.row - 1].lead}
-          question={byId(state.active.cat).qs[state.active.row - 1].q}
-          image={byId(state.active.cat).qs[state.active.row - 1].img}
-          answer={byId(state.active.cat).qs[state.active.row - 1].a}
+          lead={active.lead}
+          question={active.q}
+          image={active.img}
+          answer={active.a}
           turn={turn}
           derived={derived}
           secLeft={secondsLeft(state)}

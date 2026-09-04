@@ -41,6 +41,12 @@ export interface GameState {
   turn0: number;
   log: LogEntry[];
   active: ActiveQuestion | null;
+  /**
+   * Which question each tile is showing this game, keyed `${cat}-${row}`. Drawn
+   * when the board opens and saved with the game, so a refresh mid-question
+   * restores the same question rather than redrawing under the players.
+   */
+  variants: Record<string, number>;
   hover: string | null;
   deadline: number;
   pausedLeft: number;

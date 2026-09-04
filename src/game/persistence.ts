@@ -1,11 +1,11 @@
 import type { ActiveQuestion, LogEntry, Phase, Team, TeamIndex } from './types';
 
-const KEY = 'sahra.game.v1';
+const KEY = 'sahra.game.v2';
 const RESUMABLE_PHASES: Phase[] = ['board', 'question', 'reveal'];
 const SAVED_PHASES: Phase[] = ['board', 'question', 'reveal', 'final'];
 
 export interface SavedGame {
-  v: 1;
+  v: 2;
   phase: Phase;
   teams: [Team, Team];
   taken: Record<string, TeamIndex>;
@@ -13,6 +13,7 @@ export interface SavedGame {
   turn0: number;
   log: LogEntry[];
   active: ActiveQuestion | null;
+  variants: Record<string, number>;
   deadline: number;
   pausedLeft: number;
   phoneUntil: number;
@@ -26,6 +27,7 @@ export function saveGame(s: {
   turn0: number;
   log: LogEntry[];
   active: ActiveQuestion | null;
+  variants: Record<string, number>;
   deadline: number;
   pausedLeft: number;
   phoneUntil: number;
@@ -33,7 +35,7 @@ export function saveGame(s: {
   if (!SAVED_PHASES.includes(s.phase)) return;
   try {
     const payload: SavedGame = {
-      v: 1,
+      v: 2,
       phase: s.phase,
       teams: s.teams,
       taken: s.taken,
@@ -41,6 +43,7 @@ export function saveGame(s: {
       turn0: s.turn0,
       log: s.log,
       active: s.active,
+      variants: s.variants,
       deadline: s.deadline,
       pausedLeft: s.pausedLeft,
       phoneUntil: s.phoneUntil,
@@ -64,7 +67,7 @@ export function loadSavedGame(): SavedGame | null {
     const raw = localStorage.getItem(KEY);
     if (!raw) return null;
     const g = JSON.parse(raw) as SavedGame;
-    if (!g || g.v !== 1) return null;
+    if (!g || g.v !== 2) return null;
     if (!RESUMABLE_PHASES.includes(g.phase)) return null;
     if (!g.drafted || g.drafted.length < 6) return null;
     return g;

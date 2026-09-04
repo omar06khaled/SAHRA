@@ -6,6 +6,7 @@ import { resolveState } from './resolve';
 import { clearSavedGame, loadSavedGame, saveGame } from './persistence';
 import { PHONE_A_FRIEND_MS, TIMER_SECONDS, type LifelineKey } from './theme';
 import { turnOf } from './helpers';
+import { drawVariants } from './pool';
 import type { Award, GameState, LogEntry, Team, TeamIndex } from './types';
 
 const blankTeam = (): Team => ({ name: '', members: ['', '', '', ''] });
@@ -18,6 +19,7 @@ const initialState: GameState = {
   turn0: 0,
   log: [],
   active: null,
+  variants: {},
   hover: null,
   deadline: 0,
   pausedLeft: 0,
@@ -105,6 +107,7 @@ export function useSahraGame() {
         turn0: saved.turn0 || 0,
         log: saved.log || [],
         active: saved.active || null,
+        variants: saved.variants || {},
         deadline: saved.deadline || 0,
         pausedLeft: saved.pausedLeft || 0,
         phoneUntil: saved.phoneUntil || 0,
@@ -165,8 +168,14 @@ export function useSahraGame() {
     });
   }, []);
 
+  // Draw the questions once, here, rather than when a tile is opened — a tile
+  // that redrew on open would hand a team a different question after an undo.
   const openBoard = useCallback(() => {
-    setState((s) => (s.drafted.length >= 6 ? { ...s, phase: 'board', turn0: 0, log: [] } : s));
+    setState((s) =>
+      s.drafted.length >= 6
+        ? { ...s, phase: 'board', turn0: 0, log: [], variants: drawVariants(s.drafted) }
+        : s,
+    );
   }, []);
 
   const endGame = useCallback(() => {
@@ -243,6 +252,7 @@ export function useSahraGame() {
       turn0: 0,
       log: [],
       active: null,
+      variants: {},
       phoneUntil: 0,
       pausedLeft: 0,
     }));
@@ -258,6 +268,7 @@ export function useSahraGame() {
       turn0: 0,
       log: [],
       active: null,
+      variants: {},
       phoneUntil: 0,
       pausedLeft: 0,
       teams: [blankTeam(), blankTeam()],
