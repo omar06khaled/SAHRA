@@ -1,14 +1,25 @@
 import packs from 'virtual:sahra-packs';
+import { FAMILY_ID, familyCategory, loadFamily } from './familyPack';
 import type { Category, Question } from './packFormat';
 
 export type { Category, Question };
 
 /**
  * Every category, built from `packs/*.md` at build time by `scripts/packsPlugin.ts`
- * and in filename order. `lead` and `q` accept inline markup: `**bold**` for
+ * and in filename order, then the family's 3eiltak category last when it has
+ * enough questions. `lead` and `q` accept inline markup: `**bold**` for
  * emphasis the host should lean on, `*italics*` for titles. See `RichText`.
  */
-export const POOL: Category[] = packs as Category[];
+export const POOL: Category[] = [...(packs as Category[])];
+
+/** Puts the family category in the pool, replacing the old one, or takes it out when `null`. */
+export function setFamilyCategory(cat: Category | null): void {
+  const i = POOL.findIndex((p) => p.id === FAMILY_ID);
+  if (i >= 0) POOL.splice(i, 1);
+  if (cat) POOL.push(cat);
+}
+
+setFamilyCategory(familyCategory(loadFamily()));
 
 export const byId = (id: string): Category => {
   const cat = POOL.find((p) => p.id === id);

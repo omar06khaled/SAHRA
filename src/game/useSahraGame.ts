@@ -160,11 +160,19 @@ export function useSahraGame() {
     });
   }, []);
 
-  const goDraft = useCallback(() => {
+  const goFamily = useCallback(() => {
     setState((s) => {
       const ready = s.teams.every((t) => t.name.trim().length > 0);
-      return ready ? { ...s, phase: 'draft' } : s;
+      return ready ? { ...s, phase: 'family' } : s;
     });
+  }, []);
+
+  const goTeams = useCallback(() => {
+    setState((s) => ({ ...s, phase: 'teams' }));
+  }, []);
+
+  const goDraft = useCallback(() => {
+    setState((s) => ({ ...s, phase: 'draft' }));
   }, []);
 
   const draftPick = useCallback((id: string) => {
@@ -294,6 +302,8 @@ export function useSahraGame() {
     actions: {
       skipToTeams,
       goIntro,
+      goFamily,
+      goTeams,
       goDraft,
       setName,
       setMember,

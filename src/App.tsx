@@ -1,6 +1,7 @@
 import { Stage } from './components/Stage';
 import { IntroScreen } from './components/IntroScreen';
 import { TeamSheetScreen } from './components/TeamSheetScreen';
+import { FamilyScreen } from './components/FamilyScreen';
 import { DraftScreen } from './components/DraftScreen';
 import { BoardScreen } from './components/BoardScreen';
 import { QuestionScreen } from './components/QuestionScreen';
@@ -31,8 +32,12 @@ export default function App() {
           onSetName={actions.setName}
           onSetMember={actions.setMember}
           onBack={actions.goIntro}
-          onNext={actions.goDraft}
+          onNext={actions.goFamily}
         />
+      )}
+
+      {state.phase === 'family' && (
+        <FamilyScreen players={[...rosterNames(0), ...rosterNames(1)]} onBack={actions.goTeams} onNext={actions.goDraft} />
       )}
 
       {state.phase === 'draft' && (
@@ -71,6 +76,7 @@ export default function App() {
           lead={active.lead}
           question={active.q}
           image={active.img}
+          author={active.by}
           photoLarge={byId(state.active.cat).photo === 'large'}
           answer={active.a}
           turn={turn}

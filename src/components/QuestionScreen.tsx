@@ -20,6 +20,8 @@ interface QuestionScreenProps {
   image?: string;
   /** Photo categories, where the picture is the question: bigger and never cropped. */
   photoLarge?: boolean;
+  /** Who wrote a family question; they sit it out. */
+  author?: string;
   answer: string;
   turn: TeamIndex;
   derived: DerivedGame;
@@ -127,6 +129,7 @@ export function QuestionScreen({
   question,
   image,
   photoLarge,
+  author,
   answer,
   turn,
   derived,
@@ -202,6 +205,22 @@ export function QuestionScreen({
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 30, padding: '12px 0', minHeight: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 34, minHeight: 0 }}>
           <div style={{ flex: image ? (photoLarge ? 2 : 3) : 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 18 }}>
+            {author && (
+              <div
+                style={{
+                  alignSelf: 'flex-start',
+                  padding: '6px 12px',
+                  border: `1px solid ${categoryInk.c}`,
+                  background: categoryInk.tint,
+                  font: "500 11px 'IBM Plex Mono', monospace",
+                  letterSpacing: '.14em',
+                  textTransform: 'uppercase',
+                  color: categoryInk.num,
+                }}
+              >
+                Kateb el so2al: {author} · mamnoo3 yegaweb
+              </div>
+            )}
             {lead && (
               <div
                 style={{

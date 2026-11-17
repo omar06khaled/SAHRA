@@ -1,8 +1,9 @@
 /**
  * The pack file format: parsing, validation and the spoiler check. Pure — no
  * Node or DOM APIs — because it runs in two places: the Vite plugin that turns
- * `packs/*.md` into the game's question pool at build time, and nowhere else at
- * runtime. See `packs/TEMPLATE.md` for the format as a pack writer sees it.
+ * `packs/*.md` into the game's question pool at build time, and the game itself,
+ * which builds the family's own 3eiltak category on the device. See
+ * `packs/TEMPLATE.md` for the format as a pack writer sees it.
  */
 
 export interface Question {
@@ -35,6 +36,8 @@ export interface Question {
   src?: string;
   /** Questions sharing a group are never drawn onto the same board. */
   groups?: string[];
+  /** Who wrote it — family questions only. The author sits that question out. */
+  by?: string;
 }
 
 export interface Category {
@@ -75,7 +78,7 @@ const FIELDS: Record<string, keyof Omit<Question, 'key' | 'groups'> | 'group'> =
 const TIERS = 6;
 
 /** FNV-1a, base 36 — short, stable, and good enough to tell questions apart. */
-const hash = (s: string): string => {
+export const hash = (s: string): string => {
   let h = 0x811c9dc5;
   for (let i = 0; i < s.length; i++) {
     h ^= s.charCodeAt(i);

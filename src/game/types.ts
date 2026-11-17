@@ -2,7 +2,7 @@ import type { LifelineKey } from './theme';
 
 export type TeamIndex = 0 | 1;
 export type Award = TeamIndex | -1;
-export type Phase = 'intro' | 'teams' | 'draft' | 'board' | 'question' | 'reveal' | 'final';
+export type Phase = 'intro' | 'teams' | 'family' | 'draft' | 'board' | 'question' | 'reveal' | 'final';
 
 export interface Team {
   name: string;
