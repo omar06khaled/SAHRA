@@ -31,6 +31,22 @@ needs a second breath, move the setup into the Lead.
 topic is Egyptian life (see `07-kalam.md`, `08-e3lanat.md`). Numbers in Franco:
 2 = ء, 3 = ع, 5 = خ, 7 = ح.
 
+**Sound like someone who lives in Egypt, not an Egyptian who grew up abroad.**
+The owner's feedback on an early draft: it read like "an Egyptian who has been
+living in America his whole life." Write the way people in Cairo actually talk
+at a family gathering:
+- No English filler where Masry has a word: "souvenir", "picnic", "boardwalk",
+  "concerts", "businessman", "within two years" all become Masry ("7agat",
+  "7afla", "ragel", "law 2arrabt b sanateen"). Keep English only for real
+  names and words Egyptians really use ("mall", brand names).
+- Don't translate English joke structures into Franco. Use Masry turns of
+  phrase and Masry exaggeration ("3omrena ma rege3nalo tany", "w yeshtery bel
+  ghaly bardo", "ta7t regleek").
+- Masry vocabulary over standard Arabic or English: "7etta" not "7ay" or
+  "neighbourhood", "gneina", "game3", "menen".
+- Test: read it aloud in a Cairo accent. If a line sounds like a caption or a
+  translation, rewrite it.
+
 **Bold is a cue for the host's voice**, not decoration: the word to lean on, the
 twist, the "you will get this wrong" part. *Italics* are for titles of films,
 songs, series, ads.
@@ -116,6 +132,12 @@ Mine specific moments, not general knowledge. Good territory:
 - **Daily life:** school (thanaweya 3amma, private lessons, the school canteen),
   snacks and brands (Molto, Chipsy, Hohos, Big Cola), microbuses, the family
   WhatsApp group, weddings, 3eid, soboo3.
+
+**The game is played all over Egypt, not just in Cairo.** Pick things a family
+in Assiut, Mansoura or Alexandria knows as well as one in Cairo: national TV,
+national brands, summer destinations, famous landmarks. Avoid things only
+Cairenes would know: a specific mall, a metro line, a downtown café, a Cairo
+neighbourhood or venue. Sahel, Alexandria, Luxor, Sharm and the like are fine.
 
 Avoid politics and the 2011 revolution as subject matter, religion as a quiz
 topic, and anything that needs one specific family's inside knowledge.
