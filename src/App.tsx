@@ -71,6 +71,7 @@ export default function App() {
           lead={active.lead}
           question={active.q}
           image={active.img}
+          photoLarge={byId(state.active.cat).photo === 'large'}
           answer={active.a}
           turn={turn}
           derived={derived}

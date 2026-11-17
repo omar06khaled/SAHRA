@@ -7,6 +7,7 @@ import { clearSavedGame, loadSavedGame, saveGame } from './persistence';
 import { PHONE_A_FRIEND_MS, TIMER_SECONDS, type LifelineKey } from './theme';
 import { turnOf } from './helpers';
 import { drawVariants } from './pool';
+import { markPlayed, startGame } from './history';
 import type { Award, GameState, LogEntry, Team, TeamIndex } from './types';
 
 const blankTeam = (): Team => ({ name: '', members: ['', '', '', ''] });
@@ -135,6 +136,12 @@ export function useSahraGame() {
     saveGame(state);
   }, [state]);
 
+  // Once a tile is opened, its question counts as played for future draws.
+  const openedKey = state.active ? state.variants[`${state.active.cat}-${state.active.row}`] : undefined;
+  useEffect(() => {
+    if (openedKey) markPlayed(openedKey);
+  }, [openedKey]);
+
   const setName = useCallback((ti: TeamIndex, v: string) => {
     setState((s) => {
       const teams = [...s.teams] as [Team, Team];
@@ -170,12 +177,13 @@ export function useSahraGame() {
 
   // Draw the questions once, here, rather than when a tile is opened — a tile
   // that redrew on open would hand a team a different question after an undo.
+  // Drawn outside the state updater: starting a game writes to the play history,
+  // and StrictMode runs updaters twice.
   const openBoard = useCallback(() => {
-    setState((s) =>
-      s.drafted.length >= 6
-        ? { ...s, phase: 'board', turn0: 0, log: [], variants: drawVariants(s.drafted) }
-        : s,
-    );
+    const { drafted } = stateRef.current;
+    if (drafted.length < 6) return;
+    const variants = drawVariants(drafted, startGame());
+    setState((s) => ({ ...s, phase: 'board', turn0: 0, log: [], variants }));
   }, []);
 
   const endGame = useCallback(() => {

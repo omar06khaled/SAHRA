@@ -21,6 +21,19 @@ npm run dev
 npm run build
 ```
 
+## Question packs
+
+Every category lives in its own file in `packs/` — see `packs/TEMPLATE.md` for the
+format. Drop a file in and build; there is no code to edit. The build checks every
+pack (missing fields, bad markup, missing photos) and fails with the file and line.
+
+Each board draws one question per tier, preferring questions not yet played on
+this device, and never puts two questions on one board when one gives away the
+other's answer or they share a `Group`.
+
+`npm run photos` downloads any missing photo whose Source is a Wikimedia Commons
+file (slowly — Wikimedia rate-limits).
+
 ## Structure
 
 - `src/game/` — game state, rules and pure helpers (draft, board, timers, the

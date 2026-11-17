@@ -18,6 +18,8 @@ interface QuestionScreenProps {
   question: string;
   /** Optional photo shown beside the question; absent means full-width text. */
   image?: string;
+  /** Photo categories, where the picture is the question: bigger and never cropped. */
+  photoLarge?: boolean;
   answer: string;
   turn: TeamIndex;
   derived: DerivedGame;
@@ -77,17 +79,21 @@ function Plate({
  * read as the same family. A src that fails to load falls back to a labelled
  * dashed frame — a missing file should be visibly missing to the host, not a
  * broken-image glyph on a screen the whole room is looking at.
+ *
+ * `large` is for photo categories: a wider 3:2 frame (held to the height the
+ * answer card leaves free) and the whole picture shown, since cropping a flag or
+ * a tower's tip can take the answer with it.
  */
-function QuestionPhoto({ src, ink }: { src: string; ink: InkSet }) {
+function QuestionPhoto({ src, ink, large }: { src: string; ink: InkSet; large?: boolean }) {
   const [failed, setFailed] = useState(false);
 
   return (
     <div
       style={{
-        flex: 2,
+        flex: large ? 3 : 2,
         minWidth: 0,
-        maxWidth: 420,
-        aspectRatio: '4 / 3',
+        maxWidth: large ? 495 : 420,
+        aspectRatio: large ? '3 / 2' : '4 / 3',
         boxSizing: 'border-box',
         display: 'flex',
         alignItems: 'center',
@@ -106,7 +112,7 @@ function QuestionPhoto({ src, ink }: { src: string; ink: InkSet }) {
       {failed ? (
         <span style={{ font: "500 10px 'IBM Plex Mono', monospace", letterSpacing: '.2em', textTransform: 'uppercase', color: '#a89f91' }}>Photo missing</span>
       ) : (
-        <img src={src} alt="" onError={() => setFailed(true)} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+        <img src={src} alt="" onError={() => setFailed(true)} style={{ width: '100%', height: '100%', objectFit: large ? 'contain' : 'cover', display: 'block' }} />
       )}
     </div>
   );
@@ -120,6 +126,7 @@ export function QuestionScreen({
   lead,
   question,
   image,
+  photoLarge,
   answer,
   turn,
   derived,
@@ -194,7 +201,7 @@ export function QuestionScreen({
 
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 30, padding: '12px 0', minHeight: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 34, minHeight: 0 }}>
-          <div style={{ flex: image ? 3 : 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 18 }}>
+          <div style={{ flex: image ? (photoLarge ? 2 : 3) : 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 18 }}>
             {lead && (
               <div
                 style={{
@@ -214,7 +221,7 @@ export function QuestionScreen({
               <RichText text={question} />
             </div>
           </div>
-          {image && <QuestionPhoto src={image} ink={categoryInk} />}
+          {image && <QuestionPhoto src={image} ink={categoryInk} large={photoLarge} />}
         </div>
         {showAnswer && (
           <div
